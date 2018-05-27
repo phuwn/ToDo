@@ -21,7 +21,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 export default class Active extends Component {
   constructor(props) {
     super(props);
-    this.itemRef = firebaseApp.database();
+    this.itemRef = firebaseApp.database().ref(this.props.userId);
     this.state = {
       todo: []
     };
@@ -29,49 +29,36 @@ export default class Active extends Component {
 
   listenForItems(itemRef) {
     var items = [];
-    this.itemRef
-      .ref(this.props.userId)
-      .child("unchecked")
-      .on("child_added", dataSnapshot => {
-        items.push({
-          value: dataSnapshot.val().Note,
-          _key: dataSnapshot.key,
-          key: dataSnapshot.key
-        });
-        this.setState({
-          todo: items
-        });
+    this.itemRef.child("unchecked").on("child_added", dataSnapshot => {
+      items.push({
+        value: dataSnapshot.val().Note,
+        _key: dataSnapshot.key,
+        key: dataSnapshot.key
       });
-    this.itemRef
-      .ref(this.props.userId)
-      .child("unchecked")
-      .on("child_removed", dataSnapshot => {
-        items = items.filter(x => x._key !== dataSnapshot.key);
-        this.setState({
-          todo: items
-        });
+      this.setState({
+        todo: items
       });
+    });
+    this.itemRef.child("unchecked").on("child_removed", dataSnapshot => {
+      items = items.filter(x => x._key !== dataSnapshot.key);
+      this.setState({
+        todo: items
+      });
+    });
   }
 
   addRow = newvalue => {
-    this.itemRef
-      .ref(this.props.userId)
-      .child("unchecked")
-      .push({
-        Note: newvalue
-      });
+    this.itemRef.child("unchecked").push({
+      Note: newvalue
+    });
   };
 
   checkoutRow = checkobject => {
-    this.itemRef
-      .ref(this.props.userId)
-      .child("checked")
-      .push({
-        Note: checkobject.text
-      });
+    this.itemRef.child("checked").push({
+      Note: checkobject.text
+    });
     Alert.alert("TODO", "Hoàn thành");
     this.itemRef
-      .ref(this.props.userId)
       .child("unchecked")
       .child(checkobject._key)
       .remove();
@@ -80,7 +67,6 @@ export default class Active extends Component {
 
   updateRow = newobject => {
     this.itemRef
-      .ref(this.props.userId)
       .child("unchecked")
       .child(newobject._key)
       .set({
@@ -94,7 +80,6 @@ export default class Active extends Component {
         text: "Ok",
         onPress: () => {
           this.itemRef
-            .ref(this.props.userId)
             .child("unchecked")
             .child(deletedkey)
             .remove();
@@ -121,7 +106,6 @@ export default class Active extends Component {
                   .signOut()
                   .then(() => {
                     this.props.changePage("login");
-                    Alert.alert("TODO", "Đăng xuất thành công");
                   })
                   .catch(function(error) {
                     Alert.alert("TODO", "An error occur");

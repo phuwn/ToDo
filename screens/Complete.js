@@ -19,7 +19,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default class Complete extends Component {
   constructor(props) {
     super(props);
-    this.itemRef = firebaseApp.database();
+    this.itemRef = firebaseApp.database().ref(this.props.userId);
     this.state = {
       done: []
     };
@@ -28,7 +28,6 @@ export default class Complete extends Component {
   listenForItems(itemRef) {
     var dones = [];
     this.itemRef
-      .ref(this.props.userId)
       .child("checked")
       .on("child_added", dataSnapshot => {
         dones.push({
@@ -41,7 +40,6 @@ export default class Complete extends Component {
         });
       });
     this.itemRef
-      .ref(this.props.userId)
       .child("checked")
       .on("child_removed", dataSnapshot => {
         dones = dones.filter(x => x._key !== dataSnapshot.key);
@@ -54,7 +52,6 @@ export default class Complete extends Component {
   deleteRow = deletedkey => {
     Alert.alert("TODO", "Đã xóa");
     this.itemRef
-      .ref(this.props.userId)
       .child("checked")
       .child(deletedkey)
       .remove();

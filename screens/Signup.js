@@ -7,7 +7,8 @@ import {
   Text,
   FlatList,
   Alert,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from "react-native";
 import { Header } from "native-base";
 import { firebaseApp } from "../constant/config.js";
@@ -19,28 +20,47 @@ export default class Signup extends Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      repassword: "",
+      hide: true
     };
   }
 
   signUp() {
-    firebaseApp
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => {
-        Alert.alert("TODO", "Đăng kí tài khoản thành công");
-        this.setState({
-          email: "",
-          password: ""
-        });
-        this.props.changePage("login");
-      })
-      .catch(function(error) {
-        Alert.alert(
-          "TODO",
-          "Tên đăng nhập hoặc mật khẩu đã có lỗi, vui lòng thay đổi . Tên đăng nhập không được bỏ trống , có dạng abcd@123.456 ( Không chứa các kí tự đặc biệt có dạng: !@#$%^&*<>,...) Password có ít nhất 6 kí tự"
-        );
+    if (this.state.password.length < 6) {
+      Alert.alert("TODO", "Password phải chứa ít nhất 6 kí tự");
+      this.setState({
+        password: "",
+        repassword: ""
       });
+    } else {
+      if (this.state.password == this.state.repassword) {
+        firebaseApp
+          .auth()
+          .createUserWithEmailAndPassword(this.state.email, this.state.password)
+          .then(() => {
+            Alert.alert("TODO", "Đăng kí tài khoản thành công");
+            this.setState({
+              email: "",
+              password: "",
+              repassword: ""
+            });
+            this.props.changePage("login");
+          })
+          .catch(function(error) {
+            Alert.alert(
+              "TODO",
+              "Email đã tồn tại hoặc sai hình thức. Email không được bỏ trống , có dạng abcd@123.456 ( Không chứa các kí tự đặc biệt có dạng: !@#$%^&*<>,...)"
+            );
+          });
+      } else {
+        Alert.alert("TODO", "Mật khẩu không khớp vui lòng nhập lại");
+        this.setState({
+          password: "",
+          repassword: ""
+        });
+      }
+    }
   }
 
   render() {
@@ -59,13 +79,18 @@ export default class Signup extends Component {
             TodoApp
           </Text>
         </View>
-        <View style={styles.body}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          enabled
+          keyboardVerticalOffset={70}
+          style={styles.body}
+        >
           <Text
             style={{
               fontWeight: "bold",
               fontStyle: "italic",
               fontSize: 30,
-              color: "#009933",
+              color: "#4da6ff",
               marginBottom: 20
             }}
           >
@@ -75,7 +100,7 @@ export default class Signup extends Component {
             <FontAwesome name="user" size={30} color="#fff" />
             <TextInput
               style={{ width: "80%", height: 45, marginLeft: 10 }}
-              placeholder="Tên đăng nhập"
+              placeholder="Email"
               onChangeText={email => this.setState({ email })}
               value={this.state.email}
               autoCorrect={true}
@@ -84,17 +109,52 @@ export default class Signup extends Component {
             />
           </View>
           <View style={styles.row}>
-            <FontAwesome name="lock" size={30} color="#fff" />
-            <TextInput
-              style={{ width: "80%", height: 45, marginLeft: 10 }}
-              placeholder="Mật khẩu"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-              autoCorrect={false}
-              autoCapitalize="none"
-              secureTextEntry={true}
-              maxLength={40}
-            />
+            <View style={styles.rowContent}>
+              <FontAwesome name="lock" size={30} color="#fff" />
+              <TextInput
+                style={{ width: "85%", height: 45, marginLeft: 10 }}
+                placeholder="Mật khẩu"
+                onChangeText={password => this.setState({ password })}
+                value={this.state.password}
+                autoCorrect={false}
+                autoCapitalize="none"
+                secureTextEntry={this.state.hide}
+                maxLength={40}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  hide: !this.state.hide
+                });
+              }}
+            >
+              <Ionicons name="md-eye-off" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.rowContent}>
+              <FontAwesome name="refresh" size={30} color="#fff" />
+              <TextInput
+                style={{ width: "85%", height: 45, marginLeft: 10 }}
+                placeholder="Xác nhận lại mật khẩu"
+                onChangeText={repassword => this.setState({ repassword })}
+                value={this.state.repassword}
+                autoCorrect={false}
+                autoCapitalize="none"
+                secureTextEntry={this.state.hide}
+                maxLength={40}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  hide: !this.state.hide
+                });
+              }}
+            >
+              <Ionicons name="md-eye-off" size={30} color="#fff" />
+            </TouchableOpacity>
           </View>
           <View style={styles.signupContent}>
             <TouchableOpacity
@@ -114,7 +174,7 @@ export default class Signup extends Component {
               <Text>Quay về</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -126,16 +186,17 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    backgroundColor: "#ffcc00",
+    backgroundColor: "#4da6ff",
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    marginBottom: 10
   },
   body: {
     flex: 5,
-    paddingTop: 30,
+    paddingTop: 20,
     alignItems: "center",
     paddingHorizontal: 20
   },
@@ -147,7 +208,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#E3E2E2",
     borderRadius: 20,
     paddingHorizontal: 5,
-    marginVertical: 10
+    marginVertical: 10,
+    justifyContent: "space-between"
+  },
+  rowContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%"
   },
   signupContent: {
     flexDirection: "row",

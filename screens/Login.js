@@ -9,7 +9,7 @@ import {
   Alert,
   TextInput
 } from "react-native";
-import { Header } from "native-base";
+import { CheckBox } from "react-native-elements";
 import { firebaseApp } from "../constant/config.js";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -19,7 +19,9 @@ export default class Login extends Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      hide: true,
+      checked: false,
     };
   }
 
@@ -29,12 +31,23 @@ export default class Login extends Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         Alert.alert("TODO", "Đăng nhập thành công");
+        if (this.state.checked == false) {
+          this.setState({
+            password: "",
+            hide: true,
+          });
+        }
+        else {
+          this.setState({
+            hide: true,
+          })
+        }
         this.props.changePage("active", {
           userId: this.state.email
         });
       })
       .catch(function(error) {
-        Alert.alert("TODO", "Sai tài khoản hoặc mật khẩu");
+        Alert.alert("TODO", "Sai email hoặc mật khẩu");
       });
   }
 
@@ -60,7 +73,7 @@ export default class Login extends Component {
               fontWeight: "bold",
               fontStyle: "italic",
               fontSize: 30,
-              color: "red",
+              color: "#4da6ff",
               marginBottom: 20
             }}
           >
@@ -70,26 +83,51 @@ export default class Login extends Component {
             <FontAwesome name="user" size={30} color="#fff" />
             <TextInput
               style={{ width: "80%", height: 45, marginLeft: 10 }}
-              placeholder="Tên đăng nhập"
+              placeholder="Email"
               onChangeText={email => this.setState({ email })}
               value={this.state.email}
-              autoCorrect={true}
+              autoCorrect={false}
               autoCapitalize="none"
               maxLength={40}
             />
           </View>
           <View style={styles.row}>
-            <FontAwesome name="lock" size={30} color="#fff" />
-            <TextInput
-              style={{ width: "80%", height: 45, marginLeft: 10 }}
-              placeholder="Mật khẩu"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-              autoCorrect={false}
-              autoCapitalize="none"
-              secureTextEntry={true}
-              maxLength={40}
+            <View style={styles.rowContent}>
+              <FontAwesome name="lock" size={30} color="#fff" />
+              <TextInput
+                style={{ width: "85%", height: 45, marginLeft: 10 }}
+                placeholder="Mật khẩu"
+                onChangeText={password => this.setState({ password })}
+                value={this.state.password}
+                autoCorrect={false}
+                autoCapitalize="none"
+                secureTextEntry={this.state.hide}
+                maxLength={40}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  hide: !this.state.hide
+                });
+              }}
+            >
+              <Ionicons name="md-eye-off" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <CheckBox
+              checked={this.state.checked}
+              onPress={() => this.setState({ checked: !this.state.checked })}
             />
+            <Text
+              style={{
+                fontStyle: "italic",
+                fontSize: 16,
+              }}
+            >
+              Ghi nhớ đăng nhập
+            </Text>
           </View>
           <View style={styles.loginContent}>
             <TouchableOpacity
@@ -121,7 +159,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    backgroundColor: "#ffcc00",
+    backgroundColor: "#4da6ff",
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -142,7 +180,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#E3E2E2",
     borderRadius: 20,
     paddingHorizontal: 5,
-    marginVertical: 10
+    marginVertical: 10,
+    justifyContent: "space-between"
+  },
+  rowContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%"
   },
   loginContent: {
     flexDirection: "row",

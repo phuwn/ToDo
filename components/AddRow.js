@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default class AddRow extends Component {
   constructor(props) {
@@ -20,7 +21,12 @@ export default class AddRow extends Component {
   render() {
     return (
       <View style={styles.rowContent}>
-        <CheckBox checked={true} checkedIcon='check-circle' checkedColor='#0080ff'/>
+        <TouchableOpacity
+          onPress={() => this.onCheckout()}
+          style={{ paddingLeft: 15 , marginRight: 15 }}
+        >
+          <FontAwesome name="plus-circle" size={25} color="#0080ff"/>
+        </TouchableOpacity>
         <View
           style={{
             flex: 1,
@@ -29,7 +35,7 @@ export default class AddRow extends Component {
           }}
         >
           <TextInput
-            style={{ width: "90%", height:35}}
+            style={{ width: "90%", height:40}}
             placeholder="What u gonna do"
             onSubmitEditing={this.onSubmit}
             onChangeText={text => this.setState({ text })}
@@ -43,7 +49,7 @@ export default class AddRow extends Component {
           onPress={() => this.onSubmit()}
           style={{ paddingRight: 10 }}
         >
-          <Ionicons name="md-arrow-dropdown-circle" color='#0080ff' size={25} />
+          <FontAwesome name="chevron-circle-down" color='#0080ff' size={25} />
         </TouchableOpacity>
       </View>
     );
@@ -56,8 +62,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 10,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     backgroundColor: '#b3d9ff',
     
   }

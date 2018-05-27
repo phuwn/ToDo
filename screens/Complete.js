@@ -33,7 +33,8 @@ export default class Complete extends Component {
         dones.push({
           value: dataSnapshot.val().Note,
           _key: dataSnapshot.key,
-          key: dataSnapshot.key
+          key: dataSnapshot.key,
+          _date: dataSnapshot.val().Date,
         });
         this.setState({
           done: dones
@@ -89,6 +90,7 @@ export default class Complete extends Component {
                 value={item.value}
                 _key={item._key}
                 deleteRow={this.deleteRow}
+                _date={item._date}
               />
             )}
           />
@@ -117,6 +119,6 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 5,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   }
 });

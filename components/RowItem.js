@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Text } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -29,13 +29,15 @@ class RowItem extends Component {
 
   render() {
     return (
+      <View style={styles.body}>
       <View style={styles.rowContent}>
       
-        <CheckBox
-          checked={false}
+        <TouchableOpacity
           onPress={() => this.onCheckout()}
-          uncheckedIcon='circle-o'
-        />
+          style={{ paddingLeft: 15 , marginRight: 15 }}
+        >
+          <FontAwesome name="exclamation-circle" size={25} color="#fff"/>
+        </TouchableOpacity>
         <View
           style={{
             flex: 1,
@@ -44,7 +46,7 @@ class RowItem extends Component {
           }}
         >
           <TextInput
-            style={{ width: "90%", height:35 }}
+            style={{ width: "90%", height:40 }}
             placeholder="What u gonna do"
             onSubmitEditing={this.onUpdate}
             onChangeText={text => this.setState({ text })}
@@ -61,19 +63,35 @@ class RowItem extends Component {
           <FontAwesome name="trash-o" size={25} />
         </TouchableOpacity>
       </View>
+      <View style={styles.date}>
+      <Text>Created at: {this.props._date}</Text>
+      </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  rowContent: {
-    // flex: 1,
+  body: {
     width: "100%",
+    paddingHorizontal: 10,
+    marginTop: 35,
+  },
+  date: {
+    alignItems: "flex-end",
+    marginLeft: 5,
+    // borderColor: "#b3d9ff",
+    // borderWidth: 5,
+    // backgroundColor: "#b3d9ff",
+    // borderRadius: 8,
+  },
+  rowContent: {
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 10,
-    paddingBottom: 5,
-    paddingTop: 10,
+    borderColor: "#b3d9ff",
+    borderWidth: 5,
+    backgroundColor: "#b3d9ff",
+    borderRadius: 20,
   }
 });
 

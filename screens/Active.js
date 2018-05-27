@@ -23,7 +23,7 @@ export default class Active extends Component {
     super(props);
     this.itemRef = firebaseApp.database().ref(this.props.userId);
     this.state = {
-      todo: []
+      todo: [],
     };
   }
 
@@ -33,7 +33,8 @@ export default class Active extends Component {
       items.push({
         value: dataSnapshot.val().Note,
         _key: dataSnapshot.key,
-        key: dataSnapshot.key
+        key: dataSnapshot.key,
+        _date: dataSnapshot.val().Date,
       });
       this.setState({
         todo: items
@@ -49,13 +50,15 @@ export default class Active extends Component {
 
   addRow = newvalue => {
     this.itemRef.child("unchecked").push({
-      Note: newvalue
+      Note: newvalue,
+      Date: new Date().toLocaleString(),
     });
   };
 
   checkoutRow = checkobject => {
     this.itemRef.child("checked").push({
-      Note: checkobject.text
+      Note: checkobject.text,
+      Date: new Date().toLocaleString(),
     });
     Alert.alert("TODO", "Hoàn thành");
     this.itemRef
@@ -154,6 +157,7 @@ export default class Active extends Component {
                 checkoutRow={this.checkoutRow}
                 updateRow={this.updateRow}
                 deleteRow={this.deleteRow}
+                _date={item._date}
               />
             )}
           />

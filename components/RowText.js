@@ -19,19 +19,21 @@ class RowText extends Component {
 
   render() {
     return (
+      <View style={styles.body}>
       <View style={styles.rowContent}>
-        <CheckBox
-          checked={true}
-          checkedIcon='check-circle'
-          checkedColor='#33cc33'
-        />
+      <TouchableOpacity
+        style={{ paddingLeft: 15 , marginRight: 15 }}
+      >
+        <FontAwesome name="check-circle" size={25} color="#fff"/>
+      </TouchableOpacity>
+
         <View
           style={{
             flex: 1,
             justifyContent: "flex-start",
           }}
         >
-          <Text style={{ width: "90%" , height:35 , paddingVertical:10 }}>
+          <Text style={{ width: "90%" , height:40 , paddingVertical:10 }}>
             {this.state.text}
           </Text>
         </View>
@@ -43,19 +45,35 @@ class RowText extends Component {
           <FontAwesome name="trash-o" size={25} />
         </TouchableOpacity>
       </View>
+      <View style={styles.date}>
+      <Text>Done at: {this.props._date}</Text>
+      </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  rowContent: {
-    // flex: 1,
+  body: {
     width: "100%",
+    paddingHorizontal: 10,
+    marginTop: 35,
+  },
+  date: {
+    alignItems: "flex-end",
+    marginLeft: 5,
+    // borderColor: "#66ff99",
+    // borderWidth: 5,
+    // backgroundColor: "#66ff99",
+    // borderRadius: 8,
+  },
+  rowContent: {
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 10,
-    paddingBottom: 5,
-    paddingTop: 10,
+    borderColor: "#66ff99",
+    borderWidth: 5,
+    backgroundColor: "#66ff99",
+    borderRadius: 20,
   }
 });
 

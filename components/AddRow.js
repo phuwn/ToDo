@@ -21,12 +21,11 @@ export default class AddRow extends Component {
   render() {
     return (
       <View style={styles.rowContent}>
-        <TouchableOpacity
-          onPress={() => this.onCheckout()}
+        <View
           style={{ paddingLeft: 15 , marginRight: 15 }}
         >
           <FontAwesome name="plus-circle" size={25} color="#0080ff"/>
-        </TouchableOpacity>
+        </View>
         <View
           style={{
             flex: 1,

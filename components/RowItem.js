@@ -10,6 +10,7 @@ class RowItem extends Component {
     this.state = {
       text: this.props.value,
       _key: this.props._key,
+      _date: this.props._date
     };
   }
 
@@ -64,7 +65,7 @@ class RowItem extends Component {
         </TouchableOpacity>
       </View>
       <View style={styles.date}>
-      <Text>Created at: {this.props._date}</Text>
+      <Text>Created at: {this.state._date}</Text>
       </View>
       </View>
     );

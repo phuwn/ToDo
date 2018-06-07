@@ -73,7 +73,8 @@ export default class Active extends Component {
       .child("unchecked")
       .child(newobject._key)
       .set({
-        Note: newobject.text
+        Note: newobject.text,
+        Date: newobject._date,
       });
   };
 
